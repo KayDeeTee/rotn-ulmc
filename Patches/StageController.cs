@@ -19,6 +19,7 @@ internal static class RRStageControllerPatch
     [HarmonyPostfix]
     public static void UnpackScene(RRStageController __instance, ScenePayload currentScenePayload)
     {
+        instance = __instance;
         LuaManager.Reset();
 
         if (currentScenePayload is not RRDynamicScenePayload payload)
@@ -29,7 +30,6 @@ internal static class RRStageControllerPatch
         UIPlugin.Logger.LogInfo(currentScenePayload.GetLevelId());
 
         LuaPath = Path.Combine(Path.GetDirectoryName(payload.GetBeatmapFileName()), "UI");
-        instance = __instance;
 
         if (!Directory.Exists(LuaPath))
         {
@@ -68,6 +68,8 @@ internal static class RRStageControllerPatch
 
             ctx.OnFrame.Invoke();
         }
+
+        LuaManager.logOSD.Update(fmod.DeltaTime);
     }
 
     //

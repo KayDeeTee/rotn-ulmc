@@ -24,7 +24,6 @@ class ProxyRectTransform
         gameObject.transform.SetParent(target.transform, false);
         return gameObject.GetComponent<RectTransform>();
     }
-    //for some reason this doesn't work at all, no image component gets added
     public Image add_image(string sprite)
     {
         Image img = target.gameObject.AddComponent<UnityEngine.UI.Image>();

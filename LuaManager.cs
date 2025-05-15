@@ -31,6 +31,8 @@ public static class LuaManager
     public static List<Script> scripts = new List<Script>();
     public static List<LuaContext> luaContexts = new List<LuaContext>();
 
+    public static LuaOSD logOSD;
+
     //
     //  Reset and load all lua files found at song folder 
     //
@@ -53,6 +55,8 @@ public static class LuaManager
         //Create Vars / Functions
         lua.Globals["log"] = (System.Object)Log;
         lua.Globals["load_texture"] = (System.Object)LoadTexture;
+        lua.Globals["log_osd"] = (System.Object)LogOSD;
+        lua.Globals["err_osd"] = (System.Object)LogOSDError;
         LuaContext ctx = new LuaContext(lua);
         ctx.stageController = RRStageControllerPatch.instance;
         lua.Globals["ctx"] = ctx;
@@ -74,19 +78,32 @@ public static class LuaManager
         }
         catch (ScriptRuntimeException ex)
         {
-            UIPlugin.Logger.LogError(string.Format("LUA ScriptRuntimeEx: {0}", ex.DecoratedMessage));
+            string errorMessage = string.Format("LUA ScriptRuntimeEx: {0}", ex.DecoratedMessage);
+            UIPlugin.Logger.LogError(errorMessage);
+            logOSD.AddMessage(LuaOSDMessage.MessageLevel.Error, errorMessage, -1);
         }
         catch (SyntaxErrorException ex)
         {
-            UIPlugin.Logger.LogError(string.Format("LUA SyntaxErrorEx: {0}", ex.DecoratedMessage));
+            string errorMessage = string.Format("LUA SyntaxErrorEx: {0}", ex.DecoratedMessage);
+            UIPlugin.Logger.LogError(errorMessage);
+            logOSD.AddMessage(LuaOSDMessage.MessageLevel.Fatal, errorMessage, -1);
         }
     }
     public static void Load(string[] paths)
     {
+        LuaOSD();
         foreach (string path in paths)
         {
             LoadFile(path);
         }
+    }
+    //
+    // Create OSD for lua messages
+    //
+    public static void LuaOSD()
+    {
+        Transform rrui = RRStageControllerPatch.instance.GetComponent<Transform>();
+        logOSD = new LuaOSD(rrui);
     }
 
     //
@@ -117,6 +134,17 @@ public static class LuaManager
     {
         UIPlugin.Logger.LogInfo(message);
     }
+
+    private static void LogOSD(string message, float duration)
+    {
+        logOSD.AddMessage(LuaOSDMessage.MessageLevel.Debug, message, duration);
+    }
+
+    private static void LogOSDError(string message, float duration)
+    {
+        logOSD.AddMessage(LuaOSDMessage.MessageLevel.Error, message, duration);
+    }
+
 
     //
     //  This probably should be async but it would be very awkward to communicate that with lua

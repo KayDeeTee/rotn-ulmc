@@ -24,12 +24,21 @@ public abstract class BaseHook {
         copy.Clear();
         copy.UnionWith(hooks);
         foreach(Closure hook in copy) {
-            try {
+            try
+            {
                 hook.Call(args);
-            } catch(ScriptRuntimeException ex) {
-                UIPlugin.Logger.LogError(string.Format("LUA ScriptRuntimeEx: {0}", ex.DecoratedMessage));
-            } catch(SyntaxErrorException ex) {
-                UIPlugin.Logger.LogError(string.Format("LUA SyntaxErrorEx: {0}", ex.DecoratedMessage));
+            }
+            catch (ScriptRuntimeException ex)
+            {
+                string errorMessage = string.Format("LUA ScriptRuntimeEx: {0}", ex.DecoratedMessage);
+                UIPlugin.Logger.LogError(errorMessage);
+                LuaManager.logOSD.AddMessage(LuaOSDMessage.MessageLevel.Error, errorMessage, -1);
+            }
+            catch (SyntaxErrorException ex)
+            {
+                string errorMessage = string.Format("LUA SyntaxErrorEx: {0}", ex.DecoratedMessage);
+                UIPlugin.Logger.LogError(errorMessage);
+                LuaManager.logOSD.AddMessage(LuaOSDMessage.MessageLevel.Fatal, errorMessage, -1);
             }
         }
     }
