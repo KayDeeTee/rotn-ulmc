@@ -63,10 +63,10 @@ internal static class RRStageControllerPatch
             if (ctx.just_created)
             {
                 ctx.just_created = false;
-                ctx.run_function(ctx.on_post_init, []);
+                ctx.OnPostInit.Invoke();
             }
 
-            ctx.run_function(ctx.on_frame, []);
+            ctx.OnFrame.Invoke();
         }
     }
 
@@ -80,7 +80,7 @@ internal static class RRStageControllerPatch
         FmodTimeCapsule fmod = __instance.BeatmapPlayer.FmodTimeCapsule;
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
-            ctx.run_function(ctx.on_beat, [fmod.CurrentBeatNumber]);
+            ctx.OnBeat.Invoke(fmod.CurrentBeatNumber);
         }
     }
 
@@ -93,7 +93,7 @@ internal static class RRStageControllerPatch
     {
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
-            ctx.run_function(ctx.on_gain_vibe, [__instance._currentVibePower]);
+            ctx.OnGainVibe.Invoke(__instance._currentVibePower);
         }
     }
 
@@ -106,7 +106,7 @@ internal static class RRStageControllerPatch
     {
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
-            ctx.run_function(ctx.on_vibe_activate, [__instance._currentVibePower]);
+            ctx.OnVibeActivate.Invoke(__instance._currentVibePower);
         }
     }
 
@@ -119,7 +119,7 @@ internal static class RRStageControllerPatch
     {
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
-            ctx.run_function(ctx.on_vibe_deactivate, [__instance._currentVibePower]);
+            ctx.OnVibeDeactivate.Invoke(__instance._currentVibePower);
         }
     }
 
@@ -132,7 +132,7 @@ internal static class RRStageControllerPatch
     {
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
-            ctx.run_function(ctx.on_player_death, []);
+            ctx.OnPlayerDeath.Invoke();
         }
     }
 
@@ -145,7 +145,7 @@ internal static class RRStageControllerPatch
     {
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
-            ctx.run_function(ctx.on_player_hit, [enemyTypeId, __instance.PlayerHealth, attackLocation.x]);
+            ctx.OnPlayerHit.Invoke(enemyTypeId, __instance.PlayerHealth, attackLocation.x);
         }
     }
     
@@ -158,9 +158,7 @@ internal static class RRStageControllerPatch
     {
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
-            ctx.run_function(ctx.on_enemy_killed, [slainEnemy.DisplayName, slainEnemy.CurrentGridPosition.x]);
+            ctx.OnEnemyKilled.Invoke(slainEnemy.DisplayName, slainEnemy.CurrentGridPosition.x);
         }
     }
-
-
 }

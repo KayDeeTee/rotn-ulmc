@@ -6,6 +6,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using MoonSharp.Interpreter.Interop;
 
 namespace UIPlugin;
 
@@ -24,36 +25,20 @@ public class LuaContext
         script = lua;
     }
 
-    //
-    //  Handles checking that the hook is actually set for this ctx, and that its actually a function
-    //  Also handles basic error checking and reporting
-    //
-    public DynValue run_function(DynValue dv, object[] args)
-    {
-        if (dv.IsNil()) return DynValue.Nil;
-        if (dv.Type != DataType.Function) return DynValue.Nil;
-        try
-        {
-            return script.Call(dv, args);
-        }
-        catch (ScriptRuntimeException ex) { UIPlugin.Logger.LogError(string.Format("LUA ScriptRuntimeEx: {0}", ex.DecoratedMessage)); }
-        catch (SyntaxErrorException ex) { UIPlugin.Logger.LogError(string.Format("LUA SyntaxErrorEx: {0}", ex.DecoratedMessage)); }
-        //There should never be a syntax error here but doesn't hurt to check
-        return DynValue.Nil;
-    }
 
     //
-    //  Lua hooks so you can do ctx.on_frame = func to have func() be called every frame
+    //  Lua hooks so you can do ctx.on_frame.add(func) to have func() be called every frame
     //
-    public DynValue on_post_init = DynValue.Nil;            //on_post_init()
-    public DynValue on_frame = DynValue.Nil;                //on_frame()
-    public DynValue on_beat = DynValue.Nil;                 //on_beat(int beat)
-    public DynValue on_gain_vibe = DynValue.Nil;            //on_gain_vibe(float new_vibe)
-    public DynValue on_vibe_activate = DynValue.Nil;        //on_vibe_activate(float vibe_amt)
-    public DynValue on_vibe_deactivate = DynValue.Nil;      //on_vibe_deactivate(float vibe_amt)
-    public DynValue on_player_death = DynValue.Nil;         //on_player_death()
-    public DynValue on_player_hit = DynValue.Nil;           //on_player_hit(int id, int new_health, int track)
-    public DynValue on_enemy_killed = DynValue.Nil;         //on_enemy_killed(string id, int track)
+    public Hook OnPostInit { get; }  = new();
+    public Hook OnFrame { get; } = new();
+    public Hook<int> OnBeat { get; } = new(); // args: beat
+    public Hook<float> OnGainVibe { get; } = new(); // args: new_vibe
+    public Hook<float> OnVibeActivate { get; } = new(); // args: vibe_amt
+    public Hook<float> OnVibeDeactivate { get; } = new(); // args: vibe_amt
+    public Hook OnPlayerDeath { get; } = new();
+    public Hook<int, int, int> OnPlayerHit { get; } = new(); // args: id, new_health, track
+    public Hook<string, int> OnEnemyKilled { get; } = new(); // args: id, track
+
 
     //
     //  Game data to be passed to lua via ctx
