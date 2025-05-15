@@ -26,6 +26,7 @@ public class UIPlugin : BaseUnityPlugin
 
         LuaManager.InitUserdata();
         Harmony.CreateAndPatchAll(typeof(UIPlugin));
+        Harmony.CreateAndPatchAll(typeof(RREnemyControllerPatch));
         Harmony.CreateAndPatchAll(typeof(RRStageControllerPatch));
 
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");

@@ -66,6 +66,10 @@ class ProxyRectTransform
     public void set_size_delta(float x, float y) { target.sizeDelta = new Vector2(x, y); }
     public Dictionary<string, float> get_rotation() { return LuaManager.Vec3Dict(target.eulerAngles); }
     public void set_rotation(float x, float y, float z) { target.eulerAngles = new Vector3(x, y, z); }
+    public void set_sort_order(int v)
+    {
+        target.transform.position = new Vector3(target.transform.position.x, target.transform.position.y, v);
+    }
 
     //
     // Set gameObject properties

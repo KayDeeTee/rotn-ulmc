@@ -34,10 +34,11 @@ heart_trans = nil
 heart_sprite = nil
 
 track_name = nil
+lv_text = nil
 
 h = 0
 function on_frame()
-    log_osd("test osd message counter", 2.0)
+    --log_osd("test osd message counter", 2.0)
     --track_name.set_text("As easy as this")
     --x = author_pos.x + math.sin(ctx.current_beat) * 64
     --custom_music_author.set_position( 0, author_pos.y, author_pos.z )
@@ -76,7 +77,36 @@ function post()
     --ctx.list_all_children()
 end
 
+experience = 0
+level = 1
+function hit_enemy(enemy, rating, beat, track)
+    --log_osd(string.format("hit enemy on beat %.1f, on track %d, with accuracy %d, it has %d hp remaining", beat, track, rating, enemy.current_health), 2.0)
+    if enemy.current_health == 0 then
+        experience = experience + 1
+    end
+    if enemy.is_wyrm then
+        experience = experience + 1
+    end
+    --god i wish lua had switch statements
+    if (experience == 10) then advance_level() end
+    if (experience == 30) then advance_level() end
+    if (experience == 70) then advance_level() end
+    if (experience == 120) then advance_level() end
+    if (experience == 200) then advance_level() end
+    if (experience == 300) then advance_level() end
+    if (experience == 500) then advance_level() end
+    if (experience == 800) then advance_level() end
+end
+
+function advance_level()
+    level = level + 1
+    lv_text.set_text("<size=110>LV</size>" .. tostring(level) )
+end
+
 function Init()
+    --log_osd("test osd messages from lua fades after 5s", 5.0)
+    --err_osd("test error messages from lua fades after 10s", 10.0)
+    
     --load assets
     load_texture("heart", "heart.png", 100, 0.5, 0.5)
     load_texture("heart-flash", "heart_flash.png", 100, 0.5, 0.5)
@@ -89,15 +119,15 @@ function Init()
     load_texture("test", "test.png", 100, 0.5, 0.5)
     load_texture("gband", "great_band.png", 100, 0.5, 0.5)
     load_texture("pband", "perfect_band.png", 100, 0.5, 0.5)
+    load_texture("lvback", "LV Backer.png", 100, 0.5, 0.5)
 
     --enable hooks
-    log_osd("test osd messages from lua fades after 5s", 5.0)
-    err_osd("test error messages from lua fades after 10s", 10.0)
 
     log("testing hook system")
     ctx.on_frame.add(on_frame)
     ctx.on_beat.add(on_beat)
     ctx.on_post_init.add(post)
+    ctx.on_enemy_hit.add(hit_enemy)
 
     --find paths to objects
     --ctx.list_all_children()
@@ -158,17 +188,29 @@ function Init()
     ctx.get_image("RhythmRiftCanvas/ScreenContainer/AccuracyBar/RatingBandsParent/GreatBand").set_sprite("gband")
     ctx.get_image("RhythmRiftCanvas/ScreenContainer/AccuracyBar/RatingBandsParent/PerfectBand").set_sprite("pband")
 
-
     --testing adding text
-    lv_back = ctx.get_transform("RhythmRiftCanvas/ScreenContainer/").add_child("LV Backer")
+    lv_back = ctx.get_transform("RhythmRiftCanvas/ScreenContainer/RhythmRiftBattleUI/Content/PlayerHealth/").add_child("LV Backer")
+    lv_back.set_anchor_min(0.5, 0.2)
+    lv_back.set_anchor_max(1, 0.5)
+    lv_back.set_size_delta(0,0)
+    lv_back.set_anchor_position(-145,-190)
+    --lv_back.set_sort_order(-9002)
     --lv_back = ctx.get_transform("RhythmRiftCanvas/ScreenContainer/RhythmRiftBattleUI/Content/PlayerScore/ComboBacker").add_child("LV Backer")
 
-    --lv_text_con = lv_back.add_child("LV TEXT")
-    --lv_text = lv_text_con.add_tmpro()
-    --lv_text.set_text("test")
+    lv_img_con = lv_back.add_child("LV IMG")
+    lv_img = lv_img_con.add_image("lvback")
+    full_rect(lv_img_con)
 
-    --lv_img_con = lv_back.add_child("LV IMG")
-    --lv_img = lv_img_con.add_image("heart")
+    lv_text_con = lv_back.add_child("LV TEXT")
+    full_rect(lv_text_con)
+    lv_text_con.set_rotation(40,0,4)
+    lv_text_con.set_anchor_position(140,0)
+    lv_text = lv_text_con.add_tmpro()
+    lv_text.set_font_size(160)
+    lv_text.set_colour(0,0,0,1)
+    lv_text.set_outline(1,1,1,1,0.2,0.2)
+    lv_text.set_text("<size=110>LV</size>1")
+    
 
     --ctx.get_tmpro("RhythmRiftCanvas/ScreenContainer/LuaOSD/LuaOSDText").set_text("test\ntest\ntest\ntesttestesttest")
     --ctx.list_all_children()

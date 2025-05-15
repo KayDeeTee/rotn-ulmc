@@ -150,7 +150,7 @@ internal static class RRStageControllerPatch
             ctx.OnPlayerHit.Invoke(enemyTypeId, __instance.PlayerHealth, attackLocation.x);
         }
     }
-    
+
     //
     //  Calls the lua hook on_enemy_killed
     //

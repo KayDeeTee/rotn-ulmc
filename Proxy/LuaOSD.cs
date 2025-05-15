@@ -114,7 +114,9 @@ public class LuaOSD
     public bool requiresReordering = false;
     public void AddMessage(LuaOSDMessage.MessageLevel messageLevel, string message, float duration)
     {
-        foreach(LuaOSDMessage oSDMessage in Messages) {
+        message = message.Replace(RRStageControllerPatch.LuaPath, "UI"); //Remove path before UI/*.lua
+        foreach (LuaOSDMessage oSDMessage in Messages)
+        {
             if (oSDMessage.message == message)
             {
                 oSDMessage.duration = duration;
@@ -146,7 +148,6 @@ public class LuaOSD
             string m = message.GetStringFormatted();
             osdText += m + "\n";
         }
-
         TextObj.text = osdText;
     }
 }

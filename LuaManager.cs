@@ -6,6 +6,8 @@ using MoonSharp.Interpreter.Loaders;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using RhythmRift.Enemies;
+using Unity.Mathematics;
 
 namespace UIPlugin;
 
@@ -22,6 +24,7 @@ public static class LuaManager
         UserData.RegisterProxyType<ProxyRectTransform, RectTransform>(r => new ProxyRectTransform(r));
         UserData.RegisterProxyType<ProxyTestMeshProUGUI, TextMeshProUGUI>(r => new ProxyTestMeshProUGUI(r));
         UserData.RegisterProxyType<ProxyImage, Image>(r => new ProxyImage(r));
+        UserData.RegisterProxyType<ProxyEnemy, RREnemy>(r => new ProxyEnemy(r));
     }
 
     //

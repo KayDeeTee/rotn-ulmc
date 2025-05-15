@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 using MoonSharp.Interpreter.Interop;
+using RhythmRift.Enemies;
 
 namespace UIPlugin;
 
@@ -38,7 +39,7 @@ public class LuaContext
     public Hook OnPlayerDeath { get; } = new();
     public Hook<int, int, int> OnPlayerHit { get; } = new(); // args: id, new_health, track
     public Hook<string, int> OnEnemyKilled { get; } = new(); // args: id, track
-
+    public Hook<RREnemy, int, float, int> OnEnemyHit { get; } = new(); //args: enemy, rating_percent, target_beat, track
 
     //
     //  Game data to be passed to lua via ctx
