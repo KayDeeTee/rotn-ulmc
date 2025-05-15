@@ -21,7 +21,7 @@ class ProxyRectTransform
     public RectTransform add_child(string name)
     {
         GameObject gameObject = new GameObject(name, typeof(RectTransform));
-        gameObject.transform.parent = target.transform;
+        gameObject.transform.SetParent(target.transform, false);
         return gameObject.GetComponent<RectTransform>();
     }
     //for some reason this doesn't work at all, no image component gets added

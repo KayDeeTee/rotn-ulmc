@@ -74,11 +74,11 @@ public static class LuaManager
         }
         catch (ScriptRuntimeException ex)
         {
-            Log(String.Format("LUA ScriptRuntimeEx: {0}", ex.DecoratedMessage));
+            UIPlugin.Logger.LogError(string.Format("LUA ScriptRuntimeEx: {0}", ex.DecoratedMessage));
         }
         catch (SyntaxErrorException ex)
         {
-            Log(String.Format("LUA SyntaxErrorEx: {0}", ex.DecoratedMessage));
+            UIPlugin.Logger.LogError(string.Format("LUA SyntaxErrorEx: {0}", ex.DecoratedMessage));
         }
     }
     public static void Load(string[] paths)

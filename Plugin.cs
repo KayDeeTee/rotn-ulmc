@@ -30,6 +30,7 @@ public class UIPlugin : BaseUnityPlugin
 
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
 
-        Shared.BugSplatAccessor.Instance.BugSplat.ShouldPostException = ex => false;
+        // this throws an exception right now
+        //Shared.BugSplatAccessor.Instance.BugSplat.ShouldPostException = ex => false;
     }
 }
