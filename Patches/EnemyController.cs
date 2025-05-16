@@ -1,12 +1,24 @@
 using System.Collections.Generic;
 using HarmonyLib;
 using RhythmRift;
+using RhythmRift.Enemies;
 using static RhythmRift.RREnemyController;
 
 namespace UIPlugin;
 
 internal static class RREnemyControllerPatch
 {
+    public static RREnemyController instance;
+    [HarmonyPatch(typeof(RREnemyController), "Initialize")]
+    [HarmonyPostfix]
+    public static void Init(RREnemyController __instance)
+    {
+        instance = __instance;
+        foreach (LuaContext luaContext in LuaManager.luaContexts)
+        {
+            luaContext.enemyController = instance;
+        }
+    }
     //
     //  Call enemy hit hook
     //

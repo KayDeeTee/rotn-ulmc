@@ -37,6 +37,9 @@ track_name = nil
 lv_text = nil
 
 h = 0
+
+enemy_sprites = {}
+
 function on_frame()
     --log_osd("test osd message counter", 2.0)
     --track_name.set_text("As easy as this")
@@ -53,6 +56,33 @@ function on_frame()
         heart_sprite.set_color(1,1,0,1)
         h = 50/360
     end
+
+    enemies = ctx.GetActiveEnemies()
+
+    local z0 = 8
+    local z1 = -2
+
+    for k, enemy in pairs(enemies) do
+        local x,y,z = enemy.current_position
+
+        zp = (z-z1)/(z0-z1)
+        xp = x/3
+        xp = 0.5 + xp * (((1-zp)*0.7) + 0.3)
+
+        enemy_sprites[k].set_anchor_min(xp, zp)
+        enemy_sprites[k].set_anchor_max(xp, zp)
+
+        --if enemy.enemy_id == 2202 then
+        --    enemy_sprites[k].get_image().set_sprite("ut_skele_test")
+        --end
+    end
+
+    for i=#enemies, 32 do
+        enemy_sprites[i].set_anchor_min(-2, -2)
+        enemy_sprites[i].set_anchor_max(-2, -2)
+    end
+
+
 end
 
 function on_beat( beat )
@@ -103,10 +133,14 @@ function advance_level()
     lv_text.set_text("<size=110>LV</size>" .. tostring(level) )
 end
 
+function test_anim_frame( anim_player )
+    log_osd("?", 2)
+end
+
 function Init()
     --log_osd("test osd messages from lua fades after 5s", 5.0)
     --err_osd("test error messages from lua fades after 10s", 10.0)
-    
+
     --load assets
     load_texture("heart", "heart.png", 100, 0.5, 0.5)
     load_texture("heart-flash", "heart_flash.png", 100, 0.5, 0.5)
@@ -120,6 +154,14 @@ function Init()
     load_texture("gband", "great_band.png", 100, 0.5, 0.5)
     load_texture("pband", "perfect_band.png", 100, 0.5, 0.5)
     load_texture("lvback", "LV Backer.png", 100, 0.5, 0.5)
+
+    load_texture("ut_bg", "ut_bg.png", 100, 0.5, 0.5)
+    load_texture_nine("ut_outline", "ut_outline.png", 100, 0.5, 0.5, 8)
+    load_texture("ut_grid", "ut_grid.png", 100, 0.5, 0.5)
+
+    load_texture("ut_test", "enemy_test.png", 100, 0.5, 0.5)
+    load_texture("ut_skele_test", "ut_skeletest.png", 100, 0.5, 0.5)
+
 
     --enable hooks
 
@@ -211,6 +253,46 @@ function Init()
     lv_text.set_outline(1,1,1,1,0.2,0.2)
     lv_text.set_text("<size=110>LV</size>1")
     
+
+    --animator test
+    anim_player = ctx.create_anim_player()
+    anim_player.synced_to_beat = true
+    anim_clip = anim_player.create_new_clip("test")
+    anim_clip.loops = true
+    anim_clip.on_frame.add( test_anim_frame )
+    anim_clip.duration = 3
+    anim_player.fps = 15
+
+    --anim_player.play("test")
+
+    rrbui = ctx.get_transform("RhythmRiftCanvas/ScreenContainer/RhythmRiftBattleUI/")
+    ut_back = rrbui.add_child("UT Backer")
+    full_rect(ut_back)
+
+    ut_bg = ut_back.add_child("UT BG")
+    ut_bg.add_image("ut_bg")
+    full_rect(ut_bg)
+
+    ut_gameplay = ut_back.add_child("UT GP")
+    full_rect(ut_gameplay)
+    ut_outline = ut_gameplay.add_child("UT OUT")
+    ut_ol_img = ut_outline.add_image("ut_outline")
+    ut_ol_img.set_sliced()
+    full_rect( ut_outline )
+    ut_outline.set_anchor_min(0.3,0.1)
+    ut_outline.set_anchor_max(0.7,0.9)
+
+    ut_grid = ut_outline.add_child("UT Grid")
+    full_rect( ut_grid )
+    ut_grid.add_image("ut_grid")
+
+    for i = 0, 32 do
+        enemy_sprites[i] = ut_grid.add_child("enemy")
+        enemy_sprites[i].add_image("ut_skele_test")
+    end
+
+
+
 
     --ctx.get_tmpro("RhythmRiftCanvas/ScreenContainer/LuaOSD/LuaOSDText").set_text("test\ntest\ntest\ntesttestesttest")
     --ctx.list_all_children()

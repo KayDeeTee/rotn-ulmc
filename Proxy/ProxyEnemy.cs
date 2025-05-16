@@ -14,10 +14,11 @@ class ProxyEnemy
     {
         target = t;
     }
-    public int current_health => target.CurrentHealthValue;
-    public DynValue current_grid_pos => DynValue.NewTuple([DynValue.NewNumber(target.CurrentGridPosition.x), DynValue.NewNumber(target.CurrentGridPosition.y)]);
-    public DynValue target_grid_pos => DynValue.NewTuple([DynValue.NewNumber(target.TargetGridPosition.x), DynValue.NewNumber(target.TargetGridPosition.y)]);
-    public int enemy_id => int.Parse(target.EnemyId);
-    public bool is_wyrm => target.IsHoldNote;
+    public int CurrentHealth => target.CurrentHealthValue;
+    public DynValue CurrentGridPos => DynValue.NewTuple([DynValue.NewNumber(target.CurrentGridPosition.x), DynValue.NewNumber(target.CurrentGridPosition.y)]);
+    public DynValue TargetGridPos => DynValue.NewTuple([DynValue.NewNumber(target.TargetGridPosition.x), DynValue.NewNumber(target.TargetGridPosition.y)]);
+    public DynValue CurrentPosition => DynValue.NewTuple([DynValue.NewNumber( ((Component)target).transform.position.x), DynValue.NewNumber( ((Component)target).transform.position.y), DynValue.NewNumber( ((Component)target).transform.position.z)  ]);
+    public int EnemyId => int.Parse(target.EnemyId);
+    public bool IsWyrm => target.IsHoldNote;
 }
 

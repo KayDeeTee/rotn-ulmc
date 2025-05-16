@@ -28,6 +28,10 @@ class ProxyImage
     {
         target.fillAmount = amt;
     }
+    public void set_sliced()
+    {
+        target.type = Image.Type.Sliced;
+    }
     public void set_method(int method)
     {
         //hori

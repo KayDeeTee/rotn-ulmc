@@ -22,13 +22,13 @@ public class LuaContext
     [MoonSharpHidden]
     public RRStageController stageController;
     [MoonSharpHidden]
+    public RREnemyController enemyController;
+    [MoonSharpHidden]
     public LuaContext(Script lua)
     {
         script = lua;
         AnimationPlayers = [];
     }
-
-
     //
     //  Lua hooks so you can do ctx.on_frame.add(func) to have func() be called every frame
     //
@@ -96,6 +96,15 @@ public class LuaContext
     public Transform get_transform(string path)
     {
         return stageController.transform.Find(path).GetComponent<Transform>();
+    }
+
+    //
+    // Enemies
+    //
+    public List<RREnemy> GetActiveEnemies()
+    {
+        if (enemyController == null) return new List<RREnemy>();
+        return enemyController._activeEnemies;
     }
 
     //

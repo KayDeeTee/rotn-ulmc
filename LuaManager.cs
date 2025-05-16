@@ -58,6 +58,7 @@ public static class LuaManager
         //Create Vars / Functions
         lua.Globals["log"] = (System.Object)Log;
         lua.Globals["load_texture"] = (System.Object)LoadTexture;
+        lua.Globals["load_texture_nine"] = (System.Object)LoadTextureNine;
         lua.Globals["log_osd"] = (System.Object)LogOSD;
         lua.Globals["err_osd"] = (System.Object)LogOSDError;
         LuaContext ctx = new LuaContext(lua);
@@ -163,6 +164,20 @@ public static class LuaManager
             Rect rect = new Rect(0, 0, tex.width, tex.height);
             Vector2 pivot = new Vector2(x_pivot, y_pivot);
             Sprites[id] = Sprite.Create(tex, rect, pivot, ppu);
+        }
+    }
+
+    private static void LoadTextureNine(string id, string path, int ppu, float x_pivot, float y_pivot, float border)
+    {
+        string AssetPath = Path.Combine(RRStageControllerPatch.LuaPath, path);
+        if (File.Exists(AssetPath))
+        {
+            byte[] bytes = File.ReadAllBytes(AssetPath);
+            Texture2D tex = new Texture2D(1, 1, TextureFormat.ARGB32, false);
+            tex.LoadImage(bytes);
+            Rect rect = new Rect(0, 0, tex.width, tex.height);
+            Vector2 pivot = new Vector2(x_pivot, y_pivot);
+            Sprites[id] = Sprite.Create(tex, rect, pivot, ppu, 0, SpriteMeshType.FullRect, new Vector4(border, border, border, border));
         }
     }
 

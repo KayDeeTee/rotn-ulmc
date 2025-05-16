@@ -81,6 +81,11 @@
       <HintPath>lib/Unity.TextMeshPro.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="TicToc.ObjectPooling">
+      <HintPath>lib/TicToc.ObjectPooling.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
 
   <ItemGroup>
