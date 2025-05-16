@@ -18,10 +18,16 @@ public class LuaAnimPlayer
     LuaAnimClip CurrentAnim;
     public float CurrentTime;
     public int CurrentFrame;
+    public int AnimationFrame = 0;
+    public float AnimationProgress = 0;
     public bool Playing = false;
     public float fps;
     public float ReferenceBPM = 120.0f;
     public bool ConstantSpeed = true; // if false modify delta time by beat length
+    public bool Pausable = true; //if the animation pauses when the game is paused
+
+    public bool SyncedToBeat = false; //if true don't use seconds current seconds is just current beat - start beat, and fps is frames per beat
+    public float StartBeat = 0;
 
     [MoonSharpHidden]
     Dictionary<string, LuaAnimClip> AnimBank;
@@ -49,8 +55,23 @@ public class LuaAnimPlayer
         CurrentAnim?.OnExit?.Invoke(this);
         CurrentAnim = AnimBank[clipName];
         CurrentTime = 0;
-        CurrentFrame = 0;
+        CurrentFrame = -1;
+        AnimationFrame = 0;
+        AnimationProgress = 0.0f;
         CurrentAnim?.OnEnter?.Invoke(this);
+
+        if (SyncedToBeat)
+        {
+            StartBeat = RRStageControllerPatch.instance.BeatmapPlayer.FmodTimeCapsule.TrueBeatNumber;
+        }
+    }
+    public void PlaySync(string clipName, float subBeat)
+    {
+        Play(clipName);
+        if (SyncedToBeat)
+        {
+            StartBeat = ((int)StartBeat) + subBeat;
+        }
     }
     public void Stop()
     {
@@ -70,37 +91,47 @@ public class LuaAnimPlayer
     }
 
     [MoonSharpHidden]
-    public void Update(float deltaTime, float beatLength)
+    public void Update(float deltaTime, float beatLength, bool paused)
     {
-        if (ConstantSpeed)
+        if (!Playing) return;
+        if (CurrentAnim == null) return;
+        if (Pausable && paused) return;
+
+        if (SyncedToBeat)
         {
-            CurrentTime += deltaTime;
+            float CurrentBeat = RRStageControllerPatch.instance.BeatmapPlayer.FmodTimeCapsule.TrueBeatNumber;
+            CurrentTime = CurrentBeat - StartBeat;
         }
         else
         {
-            float currentBpm = 60 / beatLength;
-            float ratio = ReferenceBPM / currentBpm;
-            CurrentTime += deltaTime * ratio;
+            if (ConstantSpeed)
+            {
+                CurrentTime += deltaTime;
+            }
+            else
+            {
+                float currentBpm = 60 / beatLength;
+                float ratio = ReferenceBPM / currentBpm;
+                CurrentTime += deltaTime * ratio;
+            }
         }
+
         
         int cFrame = (int)(CurrentTime * fps);
-        if (cFrame != CurrentFrame)
+        while (cFrame != CurrentFrame)
         {
-            CurrentFrame = cFrame;
-            if (CurrentFrame >= CurrentAnim?.Duration)
+            CurrentFrame++;
+            if (CurrentFrame >= CurrentAnim.Duration)
             {
-                if (CurrentAnim.Loops)
-                {
-
-                    CurrentFrame %= CurrentAnim.Duration;
-                }
-                else
+                if (!CurrentAnim.Loops)
                 {
                     Playing = false;
-                    CurrentAnim?.OnFinish?.Invoke(this);
+                    CurrentAnim.OnFinish?.Invoke(this);
                     return;
                 }
             }
+            AnimationFrame = CurrentFrame % CurrentAnim.Duration;
+            AnimationProgress = (float)AnimationFrame / (float)CurrentAnim.Duration;  
             CurrentAnim?.OnFrame?.Invoke(this);
         }
     }

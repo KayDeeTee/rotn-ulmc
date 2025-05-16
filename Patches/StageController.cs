@@ -49,6 +49,7 @@ internal static class RRStageControllerPatch
     [HarmonyPostfix]
     public static void OnUpdate(RRStageController __instance)
     {
+        bool paused = __instance._isPaused;
         FmodTimeCapsule fmod = __instance.BeatmapPlayer.FmodTimeCapsule;
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
@@ -69,7 +70,7 @@ internal static class RRStageControllerPatch
 
             foreach (LuaAnimPlayer animPlayer in ctx.AnimationPlayers)
             {
-                animPlayer.Update(ctx.delta_time, fmod.BeatLengthInSeconds);
+                animPlayer.Update(ctx.delta_time, fmod.BeatLengthInSeconds, paused);
             }
         }
 
