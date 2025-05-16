@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using System;
 using MoonSharp.Interpreter.Interop;
 using RhythmRift.Enemies;
+using System.Collections.Generic;
 
 namespace UIPlugin;
 
@@ -24,13 +25,14 @@ public class LuaContext
     public LuaContext(Script lua)
     {
         script = lua;
+        AnimationPlayers = [];
     }
 
 
     //
     //  Lua hooks so you can do ctx.on_frame.add(func) to have func() be called every frame
     //
-    public Hook OnPostInit { get; }  = new();
+    public Hook OnPostInit { get; } = new();
     public Hook OnFrame { get; } = new();
     public Hook<int> OnBeat { get; } = new(); // args: beat
     public Hook<float> OnGainVibe { get; } = new(); // args: new_vibe
@@ -94,5 +96,17 @@ public class LuaContext
     public Transform get_transform(string path)
     {
         return stageController.transform.Find(path).GetComponent<Transform>();
+    }
+
+    //
+    //  Animation
+    //
+    [MoonSharpHidden]
+    public HashSet<LuaAnimPlayer> AnimationPlayers;
+    public LuaAnimPlayer CreateAnimPlayer()
+    {
+        LuaAnimPlayer animPlayer = new LuaAnimPlayer();
+        AnimationPlayers.Add(animPlayer);
+        return animPlayer;
     }
 }

@@ -65,8 +65,12 @@ internal static class RRStageControllerPatch
                 ctx.just_created = false;
                 ctx.OnPostInit.Invoke();
             }
-
             ctx.OnFrame.Invoke();
+
+            foreach (LuaAnimPlayer animPlayer in ctx.AnimationPlayers)
+            {
+                animPlayer.Update(ctx.delta_time, fmod.BeatLengthInSeconds);
+            }
         }
 
         LuaManager.logOSD.Update(fmod.DeltaTime);
