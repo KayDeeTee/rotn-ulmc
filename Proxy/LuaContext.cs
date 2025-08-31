@@ -46,33 +46,33 @@ public class LuaContext
     //
     //  Game data to be passed to lua via ctx
     //
-    public float current_time;
-    public float previous_time;
-    public float delta_time;
-    public float current_beat;
-    public float current_vibe;
-    public int current_health;
-    public bool in_vibe = false;
-    public bool just_created = true;
+    public float currentTime;
+    public float previousTime;
+    public float deltaTime;
+    public float currentBeat;
+    public float currentVibe;
+    public int currentHealth;
+    public bool inVibe = false;
+    public bool justCreated = true;
 
     //
     //  Util functions for development
     //
-    public void list_all_children()
+    public void ListAllChildren()
     {
-        list_all_children(stageController.gameObject.transform, "");
+        ListAllChildren(stageController.gameObject.transform, "");
     }
     [MoonSharpHidden]
-    public void list_all_children(Transform transform, string path)
+    public void ListAllChildren(Transform transform, string path)
     {
         UIPlugin.Logger.LogInfo(path + transform.name);
         foreach (Transform child in transform)
         {
             if (child == transform) continue;
-            list_all_children(child, path + transform.name + "/");
+            ListAllChildren(child, path + transform.name + "/");
         }
     }
-    public void list_all_components(string path)
+    public void ListAllComponents(string path)
     {
         Transform t = stageController.transform.Find(path);
         Component[] components = t.gameObject.GetComponents(typeof(Component));
@@ -85,17 +85,17 @@ public class LuaContext
     //
     //  Functions for getting references to unity componenents
     //
-    public TextMeshProUGUI get_tmpro(string path)
+    public TextMeshProUGUI GetTmpro(string path)
     {
-        return stageController.transform.Find(path).GetComponent<TextMeshProUGUI>();
+        return GetTransform(path)?.GetComponent<TextMeshProUGUI>();
     }
-    public Image get_image(string path)
+    public Image GetImage(string path)
     {
-        return stageController.transform.Find(path).GetComponent<Image>();
+        return GetTransform(path)?.GetComponent<Image>();
     }
-    public Transform get_transform(string path)
+    public Transform GetTransform(string path)
     {
-        return stageController.transform.Find(path).GetComponent<Transform>();
+        return stageController.transform.Find(path);
     }
 
     //

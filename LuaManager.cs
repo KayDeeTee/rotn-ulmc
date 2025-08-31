@@ -106,7 +106,7 @@ public static class LuaManager
     //
     public static void LuaOSD()
     {
-        Transform rrui = RRStageControllerPatch.instance.GetComponent<Transform>();
+        Transform rrui = RRStageControllerPatch.instance.transform;
         logOSD = new LuaOSD(rrui);
     }
 

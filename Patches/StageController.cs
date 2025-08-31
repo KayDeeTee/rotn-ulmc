@@ -53,28 +53,28 @@ internal static class RRStageControllerPatch
         FmodTimeCapsule fmod = __instance.BeatmapPlayer.FmodTimeCapsule;
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
-            ctx.previous_time = ctx.current_time;
-            ctx.current_time = fmod.Time;
-            ctx.delta_time = fmod.DeltaTime;
-            ctx.current_beat = fmod.TrueBeatNumber;
-            ctx.in_vibe = __instance._isVibePowerActive;
-            ctx.current_health = __instance.PlayerHealth;
-            ctx.current_vibe = __instance._currentVibePower;
+            ctx.previousTime = ctx.currentTime;
+            ctx.currentTime = fmod.Time;
+            ctx.deltaTime = fmod.DeltaTime;
+            ctx.currentBeat = fmod.TrueBeatNumber;
+            ctx.inVibe = __instance._isVibePowerActive;
+            ctx.currentHealth = __instance.PlayerHealth;
+            ctx.currentVibe = __instance._currentVibePower;
 
-            if (ctx.just_created)
+            if (ctx.justCreated)
             {
-                ctx.just_created = false;
+                ctx.justCreated = false;
                 ctx.OnPostInit.Invoke();
             }
             ctx.OnFrame.Invoke();
 
             foreach (LuaAnimPlayer animPlayer in ctx.AnimationPlayers)
             {
-                animPlayer.Update(ctx.delta_time, fmod.BeatLengthInSeconds, paused);
+                animPlayer.Update(ctx.deltaTime, fmod.BeatLengthInSeconds, paused);
             }
         }
 
-        LuaManager.logOSD.Update(fmod.DeltaTime);
+        LuaManager.logOSD?.Update(fmod.DeltaTime);
     }
 
     //
