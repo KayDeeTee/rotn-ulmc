@@ -3,6 +3,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using System;
 using Shared;
+using System.Linq;
 
 namespace UIPlugin;
 
@@ -18,7 +19,8 @@ public class UIPlugin : BaseUnityPlugin
         instance = this;
 
         Logger.LogInfo(String.Format("BuildVer: {0}", BuildInfoHelper.Instance.BuildId));
-        if (BuildInfoHelper.Instance.BuildId != "1.4.0-b20638")
+        string[] versions = ["1.7.0", "1.7.1"];
+        if (!versions.Contains(BuildInfoHelper.Instance.BuildId.Split('-')[0]))
         {
             Logger.LogInfo("Mod built for a previous version of the game, wait for an update or update this yourself.");
             return;
