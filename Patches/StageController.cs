@@ -1,9 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using HarmonyLib;
 using RhythmRift;
 using Shared.RhythmEngine;
 using Shared.SceneLoading.Payloads;
+using Shared.Utilities;
+using UnityEngine;
 
 namespace UIPlugin;
 
@@ -166,6 +171,25 @@ internal static class RRStageControllerPatch
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
             ctx.OnEnemyKilled.Invoke(slainEnemy.DisplayName, slainEnemy.CurrentGridPosition.x);
+        }
+    }
+
+    [HarmonyPatch(typeof(RRStageController), nameof(RRStageController.StageInitialize))]
+    [HarmonyPostfix]
+    public static void StageInitialize(RRStageController __instance, ref IEnumerator __result) {
+        // since the original function is a coroutine, we need to wrap the output to properly postfix
+        var original = __result;
+        __result = Wrapper();
+
+        IEnumerator Wrapper() {
+            CustomEvent.FlagAllForProcessing(__instance._beatmaps);
+
+            yield return original;
+
+            foreach(var setPortraitEvent in CustomEvent.Enumerate<SetPortraitEvent>(__instance._beatmaps)) {
+                // TODO: actually handle this
+                UIPlugin.Logger.LogWarning(setPortraitEvent.Name + " " + setPortraitEvent.IsHero);
+            }
         }
     }
 }
