@@ -1,5 +1,4 @@
 ﻿using Shared.RhythmEngine;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +6,9 @@ namespace UIPlugin;
 
 
 public abstract class CustomEvent {
+    const string PREFIX = "Lua";
+    const string GUID = "rotn.katie.lua.ui_mod";
+
     public BeatmapEvent BeatmapEvent { get; private set; } = default;
     public abstract string Type { get; }
 
@@ -24,14 +26,19 @@ public abstract class CustomEvent {
     public float? GetFloat(string key) => BeatmapEvent.GetFirstEventDataAsFloat(key);
 
     public string GetMatchingType() {
-        var typeSegments = $"Lua.{Type}".ToLowerInvariant().Split('.');
-        var beatmapTypes = BeatmapEvent.type.ToLowerInvariant().Split(' ');
+        var typeSegments = $"{PREFIX}.{Type}".ToLowerInvariant().Split('.');
+        var typeMatches = new List<string>();
         for(int i = 0; i < typeSegments.Length; i++) {
             var partialType = string.Join('.', typeSegments[i..]);
-            if(beatmapTypes.Contains(partialType)) {
-                return partialType;
+            typeMatches.Add(partialType);
+        }
+
+        foreach(var type in BeatmapEvent.type.Split()) {
+            if(typeMatches.Contains(type.ToLowerInvariant())) {
+                return type;
             }
         }
+
         return "";
     }
 
@@ -39,24 +46,27 @@ public abstract class CustomEvent {
         return !string.IsNullOrWhiteSpace(GetMatchingType());
     }
 
-    public bool ShouldProcess() {
-        var types = BeatmapEvent.type.Split(' ');
+    public virtual bool IsValid() {
+        if(!DoesTypeMatch()) {
+            return false;
+        }
+
+        var matchingType = GetMatchingType();
+        var types = BeatmapEvent.type.Split();
         foreach(var type in types) {
             var processor = GetString($"__MODS__.{type}");
             if(!string.IsNullOrEmpty(processor)) {
-                return processor == "rotn.katie.lua.ui_mod"; //TODO: would be good to have this as a constant somewhere
+                return processor == GUID;
+            } else if(type == matchingType) {
+                return true; // no mod has claimed a higher-priority type
             }
         }
-        return true; // no mod has claimed it - flag it for ourselves
-    }
-
-    public virtual bool IsValid() {
-        return DoesTypeMatch() && ShouldProcess();
+        return false; // this should never run
     }
 
     public void FlagForProcessing() {
         if(IsValid()) {
-            BeatmapEvent.AddEventData($"__MODS__.{GetMatchingType()}", "rotn.katie.lua.ui_mod"); //TODO: see above
+            BeatmapEvent.AddEventData($"__MODS__.{GetMatchingType()}", GUID);
         }
     }
 
