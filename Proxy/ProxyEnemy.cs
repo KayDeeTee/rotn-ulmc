@@ -1,8 +1,6 @@
 using MoonSharp.Interpreter;
 using RhythmRift.Enemies;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace UIPlugin;
 
@@ -21,4 +19,3 @@ class ProxyEnemy
     public int EnemyId => int.Parse(target.EnemyId);
     public bool IsWyrm => target.IsHoldNote;
 }
-

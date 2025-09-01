@@ -1,12 +1,8 @@
-#pragma warning disable IDE1006
-
 using MoonSharp.Interpreter;
 using RhythmRift;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System;
-using MoonSharp.Interpreter.Interop;
 using RhythmRift.Enemies;
 using System.Collections.Generic;
 
@@ -75,27 +71,27 @@ public class LuaContext
     public void ListAllComponents(string path)
     {
         Transform t = stageController.transform.Find(path);
-        Component[] components = t.gameObject.GetComponents(typeof(Component));
+        Component[] components = t.gameObject.GetComponents<Component>();
         foreach (Component component in components)
         {
-            UIPlugin.Logger.LogInfo(component.ToString());
+            UIPlugin.Logger.LogInfo(component);
         }
     }
 
     //
-    //  Functions for getting references to unity componenents
+    //  Functions for getting references to unity components
     //
-    public TextMeshProUGUI GetTmpro(string path)
+    public Transform GetTransform(string path)
+    {
+        return stageController.transform.Find(path);
+    }
+    public TextMeshProUGUI GetTmpro(string path) // weird capitalization is required so that it can be called as get_tmpro from lua
     {
         return GetTransform(path)?.GetComponent<TextMeshProUGUI>();
     }
     public Image GetImage(string path)
     {
         return GetTransform(path)?.GetComponent<Image>();
-    }
-    public Transform GetTransform(string path)
-    {
-        return stageController.transform.Find(path);
     }
 
     //

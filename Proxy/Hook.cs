@@ -1,6 +1,4 @@
-﻿#pragma warning disable IDE1006
-
-using MoonSharp.Interpreter;
+﻿using MoonSharp.Interpreter;
 using System.Collections.Generic;
 
 namespace UIPlugin;
@@ -24,18 +22,15 @@ public abstract class BaseHook {
         copy.Clear();
         copy.UnionWith(hooks);
         foreach(Closure hook in copy) {
-            try
-            {
+            try {
                 hook.Call(args);
             }
-            catch (ScriptRuntimeException ex)
-            {
+            catch (ScriptRuntimeException ex) {
                 string errorMessage = string.Format("LUA ScriptRuntimeEx: {0}", ex.DecoratedMessage);
                 UIPlugin.Logger.LogError(errorMessage);
                 LuaManager.logOSD.AddMessage(LuaOSDMessage.MessageLevel.Error, errorMessage, -1);
             }
-            catch (SyntaxErrorException ex)
-            {
+            catch (SyntaxErrorException ex) {
                 string errorMessage = string.Format("LUA SyntaxErrorEx: {0}", ex.DecoratedMessage);
                 UIPlugin.Logger.LogError(errorMessage);
                 LuaManager.logOSD.AddMessage(LuaOSDMessage.MessageLevel.Fatal, errorMessage, -1);

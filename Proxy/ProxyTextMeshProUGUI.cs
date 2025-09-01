@@ -1,8 +1,6 @@
 //
 //  c# will compain about snake_case usage, but functions / vars in here are for lua which does usually use snake_case
 //
-#pragma warning disable IDE1006
-
 using MoonSharp.Interpreter;
 using UnityEngine;
 using TMPro;
@@ -21,22 +19,26 @@ class ProxyTestMeshProUGUI
     //
     // Get transform
     //
-    public Transform get_transform() { return target.GetComponent<Transform>(); }
+    public Transform GetTransform() => target.GetComponent<Transform>();
 
     //
     //  Set TMPro properties
     //
-    public string get_text() { return target.text; }
-    public void set_text(string v) { target.text = v; }
-    public void set_font_size(float v) { target.fontSize = v; }
-    public void set_outline(float r, float g, float b, float a, float thickness, float dilation)
+    public string GetText() => target.text;
+    public void SetText(string v) { target.text = v; }
+    public void SetFontSize(float v) { target.fontSize = v; }
+    public void SetOutline(float r, float g, float b, float a, float thickness, float dilation)
     {
         target.outlineColor = new Color(r, g, b, a);
         target.outlineWidth = thickness;
         target.fontMaterial.SetFloat(ShaderUtilities.ID_FaceDilate, dilation);
     }
-    public void set_colour(float r, float g, float b, float a)
+    public void SetColor(float r, float g, float b, float a)
     {
         target.color = new Color(r, g, b, a);
+    }
+    public void SetColour(float r, float g, float b, float a)
+    {
+        SetColor(r, g, b, a);
     }
 }

@@ -12,27 +12,31 @@ class ProxyImage
     {
         target = t;
     }
-    public void set_sprite(string v)
+    public void SetSprite(string v)
     {
         if (LuaManager.Sprites.ContainsKey(v))
         {
             target.sprite = LuaManager.Sprites[v];
         }
     }
-    public Transform get_transform() { return target.GetComponent<Transform>(); }
-    public void set_color(float r, float g, float b, float a)
+    public Transform GetTransform() { return target.GetComponent<Transform>(); }
+    public void SetColor(float r, float g, float b, float a)
     {
         target.color = new Color(r, g, b, a);
     }
-    public void set_fill(float amt)
+    public void SetColour(float r, float g, float b, float a)
+    {
+        SetColor(r, g, b, a);    
+    }
+    public void SetFill(float amt)
     {
         target.fillAmount = amt;
     }
-    public void set_sliced()
+    public void SetSliced()
     {
         target.type = Image.Type.Sliced;
     }
-    public void set_method(int method)
+    public void SetMethod(int method)
     {
         //hori
         //vert

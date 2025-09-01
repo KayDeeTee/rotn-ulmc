@@ -7,7 +7,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using RhythmRift.Enemies;
-using Unity.Mathematics;
 
 namespace UIPlugin;
 
