@@ -24,6 +24,7 @@ public static class LuaManager
         UserData.RegisterProxyType<ProxyTestMeshProUGUI, TextMeshProUGUI>(r => new ProxyTestMeshProUGUI(r));
         UserData.RegisterProxyType<ProxyImage, Image>(r => new ProxyImage(r));
         UserData.RegisterProxyType<ProxyEnemy, RREnemy>(r => new ProxyEnemy(r));
+        UserData.RegisterProxyType<ProxyLuaEvent, LuaEvent>(r => new ProxyLuaEvent(r));
     }
 
     //

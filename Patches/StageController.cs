@@ -1,14 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using HarmonyLib;
 using RhythmRift;
 using Shared.RhythmEngine;
 using Shared.SceneLoading.Payloads;
-using Shared.Utilities;
-using UnityEngine;
 
 namespace UIPlugin;
 
@@ -186,9 +182,15 @@ internal static class RRStageControllerPatch
 
             yield return original;
 
-            foreach(var setPortraitEvent in CustomEvent.Enumerate<SetPortraitEvent>(__instance._beatmaps)) {
-                // TODO: actually handle this
-                UIPlugin.Logger.LogWarning(setPortraitEvent.Name + " " + setPortraitEvent.IsHero);
+            foreach(var customEvent in CustomEvent.Enumerate(__instance._beatmaps)) {
+                if(customEvent is SetPortraitEvent setPortraitEvent) {
+                    // TODO: actually handle this
+                    UIPlugin.Logger.LogWarning($"Preloading {setPortraitEvent.Name} {setPortraitEvent.IsHero}");
+                } else if(customEvent is LuaEvent luaEvent) {
+                    foreach(var ctx in LuaManager.luaContexts) {
+                        ctx.GetEventHandler(luaEvent.CustomType).OnPreload.Invoke(luaEvent);
+                    }
+                }
             }
         }
     }

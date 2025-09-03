@@ -6,8 +6,8 @@ namespace UIPlugin;
 
 
 public abstract class CustomEvent {
-    const string PREFIX = "Lua";
-    const string GUID = "rotn.katie.lua.ui_mod";
+    public const string PREFIX = "Lua";
+    public const string GUID = "rotn.katie.lua.ui_mod";
 
     public BeatmapEvent BeatmapEvent { get; private set; } = default;
     public abstract string Type { get; }
@@ -25,7 +25,7 @@ public abstract class CustomEvent {
     public int? GetInt(string key) => BeatmapEvent.GetFirstEventDataAsInt(key);
     public float? GetFloat(string key) => BeatmapEvent.GetFirstEventDataAsFloat(key);
 
-    public string GetMatchingType() {
+    public virtual string GetMatchingType() {
         var typeSegments = $"{PREFIX}.{Type}".ToLowerInvariant().Split('.');
         var typeMatches = new List<string>();
         for(int i = 0; i < typeSegments.Length; i++) {

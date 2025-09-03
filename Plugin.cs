@@ -30,6 +30,7 @@ public class UIPlugin : BaseUnityPlugin
         Harmony.CreateAndPatchAll(typeof(UIPlugin));
         Harmony.CreateAndPatchAll(typeof(RREnemyControllerPatch));
         Harmony.CreateAndPatchAll(typeof(RRStageControllerPatch));
+        Harmony.CreateAndPatchAll(typeof(RRBeatmapPlayerPatch));
 
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
 

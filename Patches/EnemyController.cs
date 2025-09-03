@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using HarmonyLib;
 using RhythmRift;
-using RhythmRift.Enemies;
 using static RhythmRift.RREnemyController;
 
 namespace UIPlugin;

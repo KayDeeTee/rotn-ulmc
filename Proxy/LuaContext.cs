@@ -114,4 +114,18 @@ public class LuaContext
         AnimationPlayers.Add(animPlayer);
         return animPlayer;
     }
+
+    //
+    //  Custom Events
+    private Dictionary<string, LuaEventHandler> EventHandlers { get; } = [];
+    public LuaEventHandler GetEventHandler(string name) {
+        if(name.Split().Length != 1) {
+            UIPlugin.Logger.LogWarning($"Event name '{name}' is invalid because it contains whitespace. The event will never be called.");
+        }
+        name = name.ToLowerInvariant();
+        if(!EventHandlers.ContainsKey(name)) {
+            EventHandlers[name] = new LuaEventHandler();
+        }
+        return EventHandlers[name];
+    }
 }
