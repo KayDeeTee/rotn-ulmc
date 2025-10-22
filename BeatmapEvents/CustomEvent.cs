@@ -1,6 +1,8 @@
 ﻿using Shared.RhythmEngine;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using UnityEngine;
 
 namespace UIPlugin;
 
@@ -8,7 +10,7 @@ namespace UIPlugin;
 public abstract class CustomEvent {
     public const string PREFIX = "Lua";
     public const string GUID = "rotn.katie.lua.ui_mod";
-
+    
     public BeatmapEvent BeatmapEvent { get; private set; } = default;
     public abstract string Type { get; }
 
@@ -21,10 +23,12 @@ public abstract class CustomEvent {
         }
         return BeatmapEvent.GetFirstEventDataAsString(key);
     }
-    public bool? GetBool(string key) => BeatmapEvent.GetFirstEventDataAsBool(key);
-    public int? GetInt(string key) => BeatmapEvent.GetFirstEventDataAsInt(key);
-    public float? GetFloat(string key) => BeatmapEvent.GetFirstEventDataAsFloat(key);
-
+    
+    public bool? GetBool(string key) => bool.TryParse(GetString(key), out var result) ? result : null;
+    public int? GetInt(string key) => int.TryParse(GetString(key), out var result) ? result : null;
+    public float? GetFloat(string key) => float.TryParse(GetString(key), NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var result) ? result : null;
+    public Color? GetColor(string key) => ColorUtility.TryParseHtmlString(GetString(key), out var color) ? color : null;
+    
     public virtual string GetMatchingType() {
         var typeSegments = $"{PREFIX}.{Type}".ToLowerInvariant().Split('.');
         var typeMatches = new List<string>();
@@ -32,13 +36,13 @@ public abstract class CustomEvent {
             var partialType = string.Join('.', typeSegments[i..]);
             typeMatches.Add(partialType);
         }
-
+        
         foreach(var type in BeatmapEvent.type.Split()) {
             if(typeMatches.Contains(type.ToLowerInvariant())) {
                 return type;
             }
         }
-
+        
         return "";
     }
 
