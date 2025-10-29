@@ -19,7 +19,7 @@ public class UIPlugin : BaseUnityPlugin
         instance = this;
 
         Logger.LogInfo(String.Format("BuildVer: {0}", BuildInfoHelper.Instance.BuildId));
-        string[] versions = ["1.7.0", "1.7.1"];
+        string[] versions = ["1.7.0", "1.7.1", "1.8.0", "1.9.0", "1.10.0"];
         if (!versions.Contains(BuildInfoHelper.Instance.BuildId.Split('-')[0]))
         {
             Logger.LogInfo("Mod built for a previous version of the game, wait for an update or update this yourself.");
