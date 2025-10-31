@@ -5,6 +5,7 @@ using HarmonyLib;
 using RhythmRift;
 using Shared.RhythmEngine;
 using Shared.SceneLoading.Payloads;
+using UnityEngine;
 
 namespace UIPlugin;
 
@@ -182,13 +183,24 @@ internal static class RRStageControllerPatch
 
             yield return original;
 
+            float startBeat = Mathf.Max(0,
+                __instance._isPracticeMode
+                ? __instance._practiceModeStartBeatNumber - __instance._practiceModeTotalBeatsSkippedBeforeStartBeatmap - __instance._microRiftMusicFadeInDurationInBeats
+                : 0
+            );
+            
             foreach(var customEvent in CustomEvent.Enumerate(__instance._beatmaps)) {
                 if(customEvent is SetPortraitEvent setPortraitEvent) {
                     // TODO: actually handle this
                     UIPlugin.Logger.LogWarning($"Preloading {setPortraitEvent.Name} {setPortraitEvent.IsHero}");
                 } else if(customEvent is LuaEvent luaEvent) {
                     foreach(var ctx in LuaManager.luaContexts) {
-                        ctx.GetEventHandler(luaEvent.CustomType).OnPreload.Invoke(luaEvent);
+                        if(luaEvent.BeatmapEvent.startBeatNumber <= startBeat) {
+                            ctx.GetEventHandler(luaEvent.CustomType).OnSkip.Invoke(luaEvent);
+                            luaEvent.FlagAsProcessed();
+                        } else {
+                            ctx.GetEventHandler(luaEvent.CustomType).OnPreload.Invoke(luaEvent);
+                        }
                     }
                 }
             }

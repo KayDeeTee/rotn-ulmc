@@ -73,7 +73,18 @@ public abstract class CustomEvent {
             BeatmapEvent.AddEventData($"__MODS__.{GetMatchingType()}", GUID);
         }
     }
+    
+    public void FlagAsProcessed() {
+        FlagForProcessing();
+        if(IsValid()) {
+            BeatmapEvent.AddEventData("__MODS__.__PROCESSED__", GUID);
+        }
+    }
 
+    public bool HasBeenProcessed() {
+        return !string.IsNullOrEmpty(GetString("__MODS__.__PROCESSED__"));
+    }
+    
     public static bool TryParse<T>(BeatmapEvent beatmapEvent, out T setPortraitEvent) where T : CustomEvent, new() {
         setPortraitEvent = new() {
             BeatmapEvent = beatmapEvent

@@ -1,7 +1,6 @@
 using HarmonyLib;
 using RhythmRift;
 using Shared.RhythmEngine;
-using UnityEngine.UIElements;
 
 namespace UIPlugin;
 
@@ -10,9 +9,19 @@ internal static class RRBeatmapPlayerPatch {
     [HarmonyPostfix]
     public static void ProcessBeatEvent(BeatmapEvent beatEvent) {
         if(CustomEvent.TryParse(beatEvent, out SetPortraitEvent setPortraitEvent)) {
+            if(setPortraitEvent.HasBeenProcessed()) {
+                return;
+            }
+            setPortraitEvent.FlagAsProcessed();
+
             // TODO: actually handle this
             UIPlugin.Logger.LogWarning($"Loading {setPortraitEvent.Name} {setPortraitEvent.IsHero}");
         } else if(CustomEvent.TryParse(beatEvent, out LuaEvent luaEvent)) {
+            if(luaEvent.HasBeenProcessed()) {
+                return;
+            }
+            luaEvent.FlagAsProcessed();
+
             foreach(var ctx in LuaManager.luaContexts) {
                 ctx.GetEventHandler(luaEvent.CustomType).OnEvent.Invoke(luaEvent);
             }
