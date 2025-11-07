@@ -69,7 +69,7 @@ public abstract class CustomEvent {
     }
 
     public void FlagForProcessing() {
-        if(IsValid()) {
+        if(DoesTypeMatch()) {
             BeatmapEvent.AddEventData($"__MODS__.{GetMatchingType()}", GUID);
         }
     }
