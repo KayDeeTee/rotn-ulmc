@@ -4,25 +4,36 @@ using HarmonyLib;
 using System;
 using Shared;
 using System.Linq;
+using PluginConfig = UIPlugin.Config;
 
 namespace UIPlugin;
 
-[BepInPlugin("rotn.katie.lua.ui_mod", "UI Mod", "0.1.0.0")]
+
+[BepInPlugin(GUID, NAME, VERSION)]
 public class UIPlugin : BaseUnityPlugin
 {
+    public const string GUID = "rotn.katie.lua.ui_mod";
+    public const string NAME = "UI Mod";
+    public const string VERSION = "0.1.0.0";
+
+    public const string ALLOWED_VERSIONS = "1.10.0 1.8.0 1.7.1 1.7.0";
+    public static string[] AllowedVersions => ALLOWED_VERSIONS.Split(' ');
+
+
     internal static new ManualLogSource Logger;
     internal static UIPlugin instance;
-    private void Awake()
+
+    internal void Awake()
     {
         // Plugin startup logic
         Logger = base.Logger;
         instance = this;
 
-        Logger.LogInfo(String.Format("BuildVer: {0}", BuildInfoHelper.Instance.BuildId));
-        string[] versions = ["1.7.0", "1.7.1", "1.8.0", "1.9.0", "1.10.0", "1.11.0"];
-        if (!versions.Contains(BuildInfoHelper.Instance.BuildId.Split('-')[0]))
-        {
-            Logger.LogInfo("Mod built for a previous version of the game, wait for an update or update this yourself.");
+        PluginConfig.Bind(Config);
+
+        var gameVersion = BuildInfoHelper.Instance.BuildId.Split('-')[0];
+        if(!AllowedVersions.Contains(gameVersion) && !PluginConfig.VersionControl.DisableVersionCheck) {
+            Logger.LogFatal($"The current version of the game is not compatible with this plugin. Please update the game or the mod to the correct version. The current mod version is v{VERSION} and the current game version is {gameVersion}. Allowed game versions: {string.Join(", ", AllowedVersions)}");
             return;
         }
 
