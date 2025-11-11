@@ -190,10 +190,7 @@ internal static class RRStageControllerPatch
             );
             
             foreach(var customEvent in CustomEvent.Enumerate(__instance._beatmaps)) {
-                if(customEvent is SetPortraitEvent setPortraitEvent) {
-                    // TODO: actually handle this
-                    UIPlugin.Logger.LogWarning($"Preloading {setPortraitEvent.Name} {setPortraitEvent.IsHero}");
-                } else if(customEvent is LuaEvent luaEvent) {
+                if(customEvent is LuaEvent luaEvent) {
                     foreach(var ctx in LuaManager.luaContexts) {
                         if(luaEvent.BeatmapEvent.startBeatNumber <= startBeat) {
                             ctx.GetEventHandler(luaEvent.CustomType).OnSkip.Invoke(luaEvent);
