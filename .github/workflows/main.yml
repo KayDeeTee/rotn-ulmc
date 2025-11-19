@@ -26,6 +26,6 @@ jobs:
       with:
         name: UI Plugin
         path: |
-          bin/Release/netstandard2.1/UI Plugin.dll
+          bin/Release/netstandard2.1/UI Lua Plugin.dll
           bin/Release/netstandard2.1/MoonSharp.Interpreter.dll
         if-no-files-found: error
