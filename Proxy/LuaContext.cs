@@ -116,6 +116,15 @@ public class LuaContext
     }
 
     //
+    // GridView
+    //
+    public RRGridView GetGridView()
+    {
+        if (stageController == null) return null;
+        return stageController._gridView;
+    }
+
+    //
     //  Custom Events
     private Dictionary<string, LuaEventHandler> EventHandlers { get; } = [];
     public LuaEventHandler GetEventHandler(string name) {

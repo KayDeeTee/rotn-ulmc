@@ -7,6 +7,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using RhythmRift.Enemies;
+using RhythmRift;
 
 namespace UIPlugin;
 
@@ -25,6 +26,11 @@ public static class LuaManager
         UserData.RegisterProxyType<ProxyImage, Image>(r => new ProxyImage(r));
         UserData.RegisterProxyType<ProxyEnemy, RREnemy>(r => new ProxyEnemy(r));
         UserData.RegisterProxyType<ProxyLuaEvent, LuaEvent>(r => new ProxyLuaEvent(r));
+        UserData.RegisterProxyType<ProxyGridview, RRGridView>(r => new ProxyGridview(r));
+        UserData.RegisterProxyType<ProxyGameObject, GameObject>(r => new ProxyGameObject(r));
+        UserData.RegisterProxyType<ProxyTile, RRTileView>(r => new ProxyTile(r));
+        UserData.RegisterProxyType<ProxyArrow, RRArrowView>(r => new ProxyArrow(r));
+
     }
 
     //

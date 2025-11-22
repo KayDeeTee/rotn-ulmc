@@ -16,7 +16,7 @@ public class UIPlugin : BaseUnityPlugin
     public const string NAME = "UI Mod";
     public const string VERSION = "0.1.0.0";
 
-    public const string ALLOWED_VERSIONS = "1.10.0 1.8.0 1.7.1 1.7.0";
+    public const string ALLOWED_VERSIONS = "1.11.1 1.10.0 1.8.0 1.7.1 1.7.0";
     public static string[] AllowedVersions => ALLOWED_VERSIONS.Split(' ');
 
 
