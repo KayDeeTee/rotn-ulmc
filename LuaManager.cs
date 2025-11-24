@@ -120,6 +120,25 @@ public static class LuaManager
     // Utils for making vectors into something you can send to lua as a table
     // Vec3 becomes a table with an x, y, and z entry so you can access it the same way you would in c#
     //
+    
+    public static Dictionary<string, float> QuaternionDict(Quaternion v)
+    {
+        Dictionary<string, float> d = new Dictionary<string, float>();
+        d["x"] = v.x;
+        d["y"] = v.y;
+        d["z"] = v.z;
+        d["w"] = v.w;
+        return d;
+    }
+    public static Dictionary<string, float> Vec4Dict(Vector4 v)
+    {
+        Dictionary<string, float> d = new Dictionary<string, float>();
+        d["x"] = v.x;
+        d["y"] = v.y;
+        d["z"] = v.z;
+        d["w"] = v.w;
+        return d;
+    }
     public static Dictionary<string, float> Vec3Dict(Vector3 v)
     {
         Dictionary<string, float> d = new Dictionary<string, float>();

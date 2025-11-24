@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using RhythmRift;
 using RhythmRift.Enemies;
@@ -15,9 +16,9 @@ class ProxyEnemy
         target = t;
     }
     public int CurrentHealth => target.CurrentHealthValue;
-    public DynValue CurrentGridPos => DynValue.NewTuple([DynValue.NewNumber(target.CurrentGridPosition.x), DynValue.NewNumber(target.CurrentGridPosition.y)]);
-    public DynValue TargetGridPos => DynValue.NewTuple([DynValue.NewNumber(target.TargetGridPosition.x), DynValue.NewNumber(target.TargetGridPosition.y)]);
-    public DynValue CurrentPosition => DynValue.NewTuple([DynValue.NewNumber( ((Component)target).transform.position.x), DynValue.NewNumber( ((Component)target).transform.position.y), DynValue.NewNumber( ((Component)target).transform.position.z)  ]);
+    public Dictionary<string, float> CurrentGridPos() => LuaManager.Vec2Dict( new Vector2(target.CurrentGridPosition.x, target.CurrentGridPosition.y ) );
+    public Dictionary<string, float> TargetGridPos() => LuaManager.Vec2Dict( new Vector2(target.TargetGridPosition.x, target.TargetGridPosition.y ) );
+    public Dictionary<string, float> CurrentPosition() => LuaManager.Vec3Dict( target.transform.localPosition );
     public int EnemyId => int.Parse(target.EnemyId);
     public bool IsWyrm => target.IsHoldNote;
     public void RecalculatePosition()
@@ -28,6 +29,12 @@ class ProxyEnemy
         Vector3 TargetGridWorldPos = GetAdjustedTileWorldPosition( target, TargetGrid.x, TargetGrid.y );
         target.CurrentGridWorldPosition = CurrentGridWorldPos;
         target.TargetWorldPosition = TargetGridWorldPos;
+
+        if( IsWyrm ){
+            if( target.IsBeingHeld ){
+                target.transform.position = target.TargetWorldPosition;
+            }
+        }
     }
     public GameObject gameObject => target.gameObject;
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using RhythmRift;
 using RhythmRift.Enemies;
@@ -22,10 +23,10 @@ class ProxyGridview
     {
         return target._arrows[ x ];
     }
-    public DynValue GetTileWorldPositionFromGridPosition(int x, int y)
+    public Dictionary<string, float> GetTileWorldPositionFromGridPosition(int x, int y)
     {
         Vector3 world_pos = target.GetTileWorldPositionFromGridPosition( x, y );
-        return DynValue.NewTuple( [DynValue.NewNumber(world_pos.x), DynValue.NewNumber(world_pos.y), DynValue.NewNumber(world_pos.z)] );
+        return LuaManager.Vec3Dict( world_pos );
     }
     public GameObject gameObject => target.gameObject;
 }

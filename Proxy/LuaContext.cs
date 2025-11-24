@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine.UI;
 using RhythmRift.Enemies;
 using System.Collections.Generic;
+using RhythmRift.Traps;
+using static RhythmRift.Traps.RRTrapController;
 
 namespace UIPlugin;
 
@@ -19,6 +21,8 @@ public class LuaContext
     public RRStageController stageController;
     [MoonSharpHidden]
     public RREnemyController enemyController;
+    [MoonSharpHidden]
+    public RRTrapController trapController;
     [MoonSharpHidden]
     public LuaContext(Script lua)
     {
@@ -101,6 +105,27 @@ public class LuaContext
     {
         if (enemyController == null) return new List<RREnemy>();
         return enemyController._activeEnemies;
+    }
+    //
+    // Traps
+    //
+    public List<TrapInstance> GetActiveTraps() //Todo actually give access to Traps
+    {
+        if( trapController = null ) return new List<TrapInstance>();
+        return trapController._activeTrapInstances;
+    }
+
+    public void FixActiveTraps()
+    {
+        if( trapController = null ) trapController = stageController._trapController;
+        if( trapController = null ) return;
+
+        foreach( TrapInstance trap in trapController._activeTrapInstances)
+        {
+            RRTrapView trapview = trap.ActiveTrapView;
+            Vector3 world_pos = stageController._gridView.GetTileWorldPositionFromGridPosition( trap.GridPosition.x, trap.GridPosition.y );
+            trapview.gameObject.transform.position = world_pos;
+        }
     }
 
     //
