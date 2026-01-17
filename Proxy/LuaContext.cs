@@ -7,6 +7,7 @@ using RhythmRift.Enemies;
 using System.Collections.Generic;
 using RhythmRift.Traps;
 using static RhythmRift.Traps.RRTrapController;
+using RiftOfTheNecroManager;
 
 namespace UIPlugin;
 
@@ -65,7 +66,7 @@ public class LuaContext
     [MoonSharpHidden]
     public void ListAllChildren(Transform transform, string path)
     {
-        UIPlugin.Logger.LogInfo(path + transform.name);
+        Log.Info(path + transform.name);
         foreach (Transform child in transform)
         {
             if (child == transform) continue;
@@ -78,7 +79,7 @@ public class LuaContext
         Component[] components = t.gameObject.GetComponents<Component>();
         foreach (Component component in components)
         {
-            UIPlugin.Logger.LogInfo(component);
+            Log.Info(component);
         }
     }
 
@@ -154,7 +155,7 @@ public class LuaContext
     private Dictionary<string, LuaEventHandler> EventHandlers { get; } = [];
     public LuaEventHandler GetEventHandler(string name) {
         if(name.Split().Length != 1) {
-            UIPlugin.Logger.LogWarning($"Event name '{name}' is invalid because it contains whitespace. The event will never be called.");
+            Log.Warning($"Event name '{name}' is invalid because it contains whitespace. The event will never be called.");
         }
         name = name.ToLowerInvariant();
         if(!EventHandlers.ContainsKey(name)) {

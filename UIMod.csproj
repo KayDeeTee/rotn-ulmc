@@ -51,26 +51,6 @@
       <HintPath>lib/TicToc.ObjectPooling.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
-    <ItemGroup>
-    <Reference Include="Unity.InputSystem">
-      <HintPath>lib/Unity.InputSystem.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Unity.Addressables">
-      <HintPath>lib/Unity.Addressables.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="FMODUnity">
-      <HintPath>lib/FMODUnity.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-    <ItemGroup>
-    <Reference Include="Unity.ResourceManager">
-      <HintPath>lib/Unity.ResourceManager.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine.UI">
       <HintPath>lib/UnityEngine.UI.dll</HintPath>
@@ -86,11 +66,9 @@
       <HintPath>lib/TicToc.ObjectPooling.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
-
-
   <ItemGroup>
-    <Reference Include="Coffee.SoftMaskForUGUI">
-      <HintPath>lib/Coffee.SoftMaskForUGUI.dll</HintPath>
+    <Reference Include="RiftOfTheNecroManager.dll">
+      <HintPath>lib/RiftOfTheNecroManager.dll</HintPath>
     </Reference>
   </ItemGroup>
   

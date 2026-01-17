@@ -34,7 +34,7 @@ public static class LuaManager
     }
 
     //
-    //   
+    //
     //
     public static Dictionary<string, Sprite> Sprites = new Dictionary<string, Sprite>();
     public static List<Script> scripts = new List<Script>();
@@ -43,7 +43,7 @@ public static class LuaManager
     public static LuaOSD logOSD;
 
     //
-    //  Reset and load all lua files found at song folder 
+    //  Reset and load all lua files found at song folder
     //
     public static void Reset()
     {
@@ -89,13 +89,13 @@ public static class LuaManager
         catch (ScriptRuntimeException ex)
         {
             string errorMessage = string.Format("LUA ScriptRuntimeEx: {0}", ex.DecoratedMessage);
-            UIPlugin.Logger.LogError(errorMessage);
+            RiftOfTheNecroManager.Log.Error(errorMessage);
             logOSD.AddMessage(LuaOSDMessage.MessageLevel.Error, errorMessage, -1);
         }
         catch (SyntaxErrorException ex)
         {
             string errorMessage = string.Format("LUA SyntaxErrorEx: {0}", ex.DecoratedMessage);
-            UIPlugin.Logger.LogError(errorMessage);
+            RiftOfTheNecroManager.Log.Error(errorMessage);
             logOSD.AddMessage(LuaOSDMessage.MessageLevel.Fatal, errorMessage, -1);
         }
     }
@@ -161,7 +161,7 @@ public static class LuaManager
     //
     private static void Log(string message)
     {
-        UIPlugin.Logger.LogInfo(message);
+        RiftOfTheNecroManager.Log.Info(message);
     }
 
     private static void LogOSD(string message, float duration)

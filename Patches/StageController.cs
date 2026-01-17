@@ -3,12 +3,14 @@ using System.IO;
 using System.Linq;
 using HarmonyLib;
 using RhythmRift;
+using RiftOfTheNecroManager;
 using Shared.RhythmEngine;
 using Shared.SceneLoading.Payloads;
 using UnityEngine;
 
 namespace UIPlugin;
 
+[HarmonyPatch(typeof(RRStageController))]
 internal static class RRStageControllerPatch
 {
     public static string LuaPath = "";
@@ -17,7 +19,7 @@ internal static class RRStageControllerPatch
     //
     //  Resets lua state then lists all lua files at <songfolder>/UI/ and parses them with LuaManager
     //
-    [HarmonyPatch(typeof(RRStageController), "UnpackScenePayload")]
+    [HarmonyPatch("UnpackScenePayload")]
     [HarmonyPostfix]
     public static void UnpackScene(RRStageController __instance, ScenePayload currentScenePayload)
     {
@@ -29,13 +31,13 @@ internal static class RRStageControllerPatch
             return;
         }
 
-        UIPlugin.Logger.LogInfo(currentScenePayload.GetLevelId());
+        Log.Info(currentScenePayload.GetLevelId());
 
         LuaPath = Path.Combine(Path.GetDirectoryName(payload.GetBeatmapFileName()), "UI");
 
         if (!Directory.Exists(LuaPath))
         {
-            UIPlugin.Logger.LogInfo("No lua folder found.");
+            Log.Info("No lua folder found.");
             return;
         }
 
@@ -47,7 +49,7 @@ internal static class RRStageControllerPatch
     //
     //  Calls the lua hook on_frame, and if first frame ctx exists runs lua hook on_post_init
     //
-    [HarmonyPatch(typeof(RRStageController), "Update")]
+    [HarmonyPatch("Update")]
     [HarmonyPostfix]
     public static void OnUpdate(RRStageController __instance)
     {
@@ -82,7 +84,7 @@ internal static class RRStageControllerPatch
     //
     //  Calls the lua hook on_beat
     //
-    [HarmonyPatch(typeof(RRStageController), "HandleBeatUpdate")]
+    [HarmonyPatch("HandleBeatUpdate")]
     [HarmonyPostfix]
     public static void OnBeat(RRStageController __instance)
     {
@@ -96,7 +98,7 @@ internal static class RRStageControllerPatch
     //
     //  Calls the lua hook on_gain_vibe
     //
-    [HarmonyPatch(typeof(RRStageController), "VibeChainSuccess")]
+    [HarmonyPatch("VibeChainSuccess")]
     [HarmonyPostfix]
     public static void VibeChainSuccess(RRStageController __instance)
     {
@@ -109,7 +111,7 @@ internal static class RRStageControllerPatch
     //
     //  Calls the lua hook on_vibe_activate
     //
-    [HarmonyPatch(typeof(RRStageController), "ActivateVibePower")]
+    [HarmonyPatch("ActivateVibePower")]
     [HarmonyPostfix]
     public static void ActivateVibePower(RRStageController __instance)
     {
@@ -122,7 +124,7 @@ internal static class RRStageControllerPatch
     //
     //  Calls the lua hook on_vibe_deactivate
     //
-    [HarmonyPatch(typeof(RRStageController), "DeactivateVibePower")]
+    [HarmonyPatch("DeactivateVibePower")]
     [HarmonyPostfix]
     public static void DeactivateVibePower(RRStageController __instance)
     {
@@ -135,7 +137,7 @@ internal static class RRStageControllerPatch
     //
     //  Calls the lua hook on_player_death
     //
-    [HarmonyPatch(typeof(RRStageController), "HandlePlayerDefeat")]
+    [HarmonyPatch("HandlePlayerDefeat")]
     [HarmonyPostfix]
     public static void HandlePlayerDefeat(RRStageController __instance)
     {
@@ -148,7 +150,7 @@ internal static class RRStageControllerPatch
     //
     //  Calls the lua hook on_player_hit
     //
-    [HarmonyPatch(typeof(RRStageController), "HandleEnemyAttack")]
+    [HarmonyPatch("HandleEnemyAttack")]
     [HarmonyPostfix]
     public static void HandleEnemyAttack(RRStageController __instance, Unity.Mathematics.int2 attackLocation, int enemyTypeId)
     {
@@ -161,46 +163,13 @@ internal static class RRStageControllerPatch
     //
     //  Calls the lua hook on_enemy_killed
     //
-    [HarmonyPatch(typeof(RRStageController), "HandleEnemySlain")]
+    [HarmonyPatch("HandleEnemySlain")]
     [HarmonyPostfix]
     public static void HandleEnemySlain(RRStageController __instance, IRREnemyDataAccessor slainEnemy)
     {
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
             ctx.OnEnemyKilled.Invoke(slainEnemy.DisplayName, slainEnemy.CurrentGridPosition.x);
-        }
-    }
-
-    [HarmonyPatch(typeof(RRStageController), nameof(RRStageController.StageInitialize))]
-    [HarmonyPostfix]
-    public static void StageInitialize(RRStageController __instance, ref IEnumerator __result) {
-        // since the original function is a coroutine, we need to wrap the output to properly postfix
-        var original = __result;
-        __result = Wrapper();
-
-        IEnumerator Wrapper() {
-            CustomEvent.FlagAllForProcessing(__instance._beatmaps);
-
-            yield return original;
-
-            float startBeat = Mathf.Max(0,
-                __instance._isPracticeMode
-                ? __instance._practiceModeStartBeatNumber - __instance._practiceModeTotalBeatsSkippedBeforeStartBeatmap - __instance._microRiftMusicFadeInDurationInBeats
-                : 0
-            );
-            
-            foreach(var customEvent in CustomEvent.Enumerate(__instance._beatmaps)) {
-                if(customEvent is LuaEvent luaEvent) {
-                    foreach(var ctx in LuaManager.luaContexts) {
-                        if(luaEvent.BeatmapEvent.startBeatNumber <= startBeat) {
-                            ctx.GetEventHandler(luaEvent.CustomType).OnSkip.Invoke(luaEvent);
-                            luaEvent.FlagAsProcessed();
-                        } else {
-                            ctx.GetEventHandler(luaEvent.CustomType).OnPreload.Invoke(luaEvent);
-                        }
-                    }
-                }
-            }
         }
     }
 }
