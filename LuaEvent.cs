@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using RiftOfTheNecroManager;
 using RiftOfTheNecroManager.BeatmapEvents;
 using RiftOfTheNecroManager.Patches;
 

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.IO;
 using System.Linq;
 using HarmonyLib;
@@ -6,7 +5,6 @@ using RhythmRift;
 using RiftOfTheNecroManager;
 using Shared.RhythmEngine;
 using Shared.SceneLoading.Payloads;
-using UnityEngine;
 
 namespace UIPlugin;
 

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using RhythmRift;
-using RhythmRift.Enemies;
 using Unity.Mathematics;
 using UnityEngine;
 
