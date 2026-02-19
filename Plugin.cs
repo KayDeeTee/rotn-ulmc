@@ -5,7 +5,7 @@ namespace UIPlugin;
 
 
 [BepInPlugin(GUID, NAME, VERSION)]
-[NecroManagerInfo(menuNameOverride: "UI Mod", customEventsNameOverride: "UIMod", isBeta: true)]
+[NecroManagerInfo(menuNameOverride: "UI Mod", customEventsNameOverride: "UIMod")]
 public class UIPlugin : RiftPlugin
 {
     public const string GUID = "rotn.katie.lua.ui_mod";
