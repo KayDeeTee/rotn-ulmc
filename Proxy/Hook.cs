@@ -1,4 +1,5 @@
 ﻿using MoonSharp.Interpreter;
+using RiftOfTheNecroManager;
 using System.Collections.Generic;
 
 namespace UIPlugin;
@@ -27,12 +28,12 @@ public abstract class BaseHook {
             }
             catch (ScriptRuntimeException ex) {
                 string errorMessage = string.Format("LUA ScriptRuntimeEx: {0}", ex.DecoratedMessage);
-                UIPlugin.Logger.LogError(errorMessage);
+                Log.Error(errorMessage);
                 LuaManager.logOSD.AddMessage(LuaOSDMessage.MessageLevel.Error, errorMessage, -1);
             }
             catch (SyntaxErrorException ex) {
                 string errorMessage = string.Format("LUA SyntaxErrorEx: {0}", ex.DecoratedMessage);
-                UIPlugin.Logger.LogError(errorMessage);
+                Log.Error(errorMessage);
                 LuaManager.logOSD.AddMessage(LuaOSDMessage.MessageLevel.Fatal, errorMessage, -1);
             }
         }

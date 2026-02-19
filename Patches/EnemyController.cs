@@ -5,10 +5,11 @@ using static RhythmRift.RREnemyController;
 
 namespace UIPlugin;
 
+[HarmonyPatch(typeof(RREnemyController))]
 internal static class RREnemyControllerPatch
 {
     public static RREnemyController instance;
-    [HarmonyPatch(typeof(RREnemyController), "Initialize")]
+    [HarmonyPatch("Initialize")]
     [HarmonyPostfix]
     public static void Init(RREnemyController __instance)
     {
@@ -21,7 +22,7 @@ internal static class RREnemyControllerPatch
     //
     //  Call enemy hit hook
     //
-    [HarmonyPatch(typeof(RREnemyController), "AttackEnemiesAtPositions")]
+    [HarmonyPatch("AttackEnemiesAtPositions")]
     [HarmonyPostfix]
     public static void AttackEnemies(RREnemyController __instance, List<EnemyHitData> __result)
     {
