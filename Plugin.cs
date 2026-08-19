@@ -10,7 +10,7 @@ public class UIPlugin : RiftPlugin
 {
     public const string GUID = "rotn.katie.lua.ui_mod";
     public const string NAME = "UI Mod";
-    public const string VERSION = "2.0.0";
+    public const string VERSION = "2.0.1";
     
     protected override void OnInit() {
         base.OnInit();
