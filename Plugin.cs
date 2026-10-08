@@ -5,12 +5,12 @@ namespace UIPlugin;
 
 
 [BepInPlugin(GUID, NAME, VERSION)]
-[NecroManagerInfo(menuNameOverride: "UI Mod", customEventsNameOverride: "UIMod")]
+[NecroManagerInfo(menuNameOverride: "UI Mod", customEventsNameOverride: "UIMod", isBeta: true)]
 public class UIPlugin : RiftPlugin
 {
     public const string GUID = "rotn.katie.lua.ui_mod";
     public const string NAME = "UI Mod";
-    public const string VERSION = "2.0.1";
+    public const string VERSION = "2.1.0";
     
     protected override void OnInit() {
         base.OnInit();
