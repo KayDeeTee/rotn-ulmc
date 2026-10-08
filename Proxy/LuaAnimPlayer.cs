@@ -11,7 +11,7 @@ public class LuaAnimPlayer
     {
         Objects = new Dictionary<string, RectTransform>();
         AnimBank = new Dictionary<string, LuaAnimClip>();
-        Playing = false;        
+        Playing = false;
     }
     [MoonSharpHidden]
     LuaAnimClip CurrentAnim;
@@ -61,7 +61,7 @@ public class LuaAnimPlayer
 
         if (SyncedToBeat)
         {
-            StartBeat = RRStageControllerPatch.instance.BeatmapPlayer.FmodTimeCapsule.TrueBeatNumber;
+            StartBeat = RRStageControllerPatch.instance.TimelineMapPlayer.FmodTimeCapsule.TrueBeatNumber;
         }
     }
     public void PlaySync(string clipName, float subBeat)
@@ -98,7 +98,7 @@ public class LuaAnimPlayer
 
         if (SyncedToBeat)
         {
-            float CurrentBeat = RRStageControllerPatch.instance.BeatmapPlayer.FmodTimeCapsule.TrueBeatNumber;
+            float CurrentBeat = RRStageControllerPatch.instance.TimelineMapPlayer.FmodTimeCapsule.TrueBeatNumber;
             CurrentTime = CurrentBeat - StartBeat;
         }
         else
@@ -130,7 +130,7 @@ public class LuaAnimPlayer
                 }
             }
             AnimationFrame = CurrentFrame % CurrentAnim.Duration;
-            AnimationProgress = (float)AnimationFrame / (float)CurrentAnim.Duration;  
+            AnimationProgress = (float)AnimationFrame / (float)CurrentAnim.Duration;
             CurrentAnim?.OnFrame?.Invoke(this);
         }
     }

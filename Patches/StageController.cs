@@ -52,7 +52,7 @@ internal static class RRStageControllerPatch
     public static void OnUpdate(RRStageController __instance)
     {
         bool paused = __instance._isPaused;
-        FmodTimeCapsule fmod = __instance.BeatmapPlayer.FmodTimeCapsule;
+        FmodTimeCapsule fmod = __instance.TimelineMapPlayer.FmodTimeCapsule;
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
             ctx.previousTime = ctx.currentTime;
@@ -61,7 +61,7 @@ internal static class RRStageControllerPatch
             ctx.currentBeat = fmod.TrueBeatNumber;
             ctx.inVibe = __instance._isVibePowerActive;
             ctx.currentHealth = __instance.PlayerHealth;
-            ctx.currentVibe = __instance._currentVibePower;
+            ctx.currentVibe = __instance.CurrentVibePower;
 
             if (ctx.justCreated)
             {
@@ -86,7 +86,7 @@ internal static class RRStageControllerPatch
     [HarmonyPostfix]
     public static void OnBeat(RRStageController __instance)
     {
-        FmodTimeCapsule fmod = __instance.BeatmapPlayer.FmodTimeCapsule;
+        FmodTimeCapsule fmod = __instance.TimelineMapPlayer.FmodTimeCapsule;
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
             ctx.OnBeat.Invoke(fmod.CurrentBeatNumber);
@@ -102,7 +102,7 @@ internal static class RRStageControllerPatch
     {
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
-            ctx.OnGainVibe.Invoke(__instance._currentVibePower);
+            ctx.OnGainVibe.Invoke(__instance.CurrentVibePower);
         }
     }
 
@@ -115,7 +115,7 @@ internal static class RRStageControllerPatch
     {
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
-            ctx.OnVibeActivate.Invoke(__instance._currentVibePower);
+            ctx.OnVibeActivate.Invoke(__instance.CurrentVibePower);
         }
     }
 
@@ -128,7 +128,7 @@ internal static class RRStageControllerPatch
     {
         foreach (LuaContext ctx in LuaManager.luaContexts)
         {
-            ctx.OnVibeDeactivate.Invoke(__instance._currentVibePower);
+            ctx.OnVibeDeactivate.Invoke(__instance.CurrentVibePower);
         }
     }
 

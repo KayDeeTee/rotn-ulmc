@@ -105,7 +105,7 @@ class ProxyEnemy
         }
 
         var stage = RRStageControllerPatch.instance;
-        var player = stage != null ? stage.BeatmapPlayer : null;
+        var player = stage != null ? stage.TimelineMapPlayer : null;
         if( player == null ){
             target.transform.position = target.TargetWorldPosition;
             return;
